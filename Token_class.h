@@ -1,3 +1,5 @@
+#pragma once
+
 class Token {
 private:
 	size_t offset;
