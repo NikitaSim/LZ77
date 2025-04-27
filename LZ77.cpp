@@ -9,11 +9,11 @@ std::vector<Token> encode(const std::string& text) {
 	size_t pos = 0;
 	const size_t size_text = text.size();
 
-	while (pos < size_text) {				//[{A (B ABC} BABA BA]A) ABBB
+	while (pos < size_text) {
 		size_t best_offset = 0;
 		size_t best_length = 0;
 		char best_char = text[pos];
-
+		
 		// Границы окна истории
 		const size_t search_start = (pos > window_size) ? pos - window_size : 0;
 		const size_t max_length = std::min(lookahead, size_text - pos);

@@ -1,36 +1,39 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "LZ77.H"
+#include "file.h"
 
-std::vector<Token> encode(const std::string&);
-std::string decode(const std::vector<Token>&);
+void print_help() {
+    std::cout << "Usage:\n"
+        << "1. Compress file\n"
+        << "2. Decompress file\n"
+        << "3. Exit\n";
+}
+
 
 int main() {
+    int choice;
+    do {
+        print_help();
+        std::cout << "Select an option (1-3): ";
+        std::cin >> choice;
+        std::cin.ignore(); // Очистка буфера
 
-	std::string text = "Flash memory is a type of non-volatile memory that can be electronically erased and reprogrammed.";
-	std::string decode_text;
-	std::vector<Token> token_text;
+        switch (choice) {
+        case 1:
+            compress_file();
+            break;
+        case 2:
+            decompress_file();
+            break;
+        case 3:
+            std::cout << "Exiting..." << std::endl;
+            break;
+        default:
+            std::cerr << "Invalid option!" << std::endl;
+            break;
+        }
+    } while (choice != 3);
 
-	try {
-		token_text = encode(text);
-		decode_text = decode(token_text);
-	}
-
-	catch (const std::exception& error) {
-		std::cout << error.what() << std::endl;
-		return 1;	
-	}
-
-	print_tokens(token_text);
-	std::cout << decode_text<<std::endl;
-
-	if (decode_text == text) {
-		std::cout << "texts are same" << std::endl;
-	}
-	else {
-		std::cout << "text not same" << std::endl;
-	}
-
-	std::cout <<"original size: " << text.size() << '\n' <<"encoded size: " << token_text.size() << std::endl;
-	return 0;
+    return 0;
 }
