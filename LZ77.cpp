@@ -1,17 +1,18 @@
 #include <iostream>
 #include <algorithm>
+#include <cstdint>
 #include "LZ77.h"
 
 std::vector<Token> encode(const std::string& text) {
-	const size_t window_size = 20; //10
-	const size_t lookahead = 10;	//5
+	const size_t window_size = 4096;  // 4KB
+	const size_t lookahead = 18;	//5
 	std::vector<Token> tokens;
 	size_t pos = 0;
 	const size_t size_text = text.size();
 
 	while (pos < size_text) {
-		size_t best_offset = 0;
-		size_t best_length = 0;
+		uint16_t best_offset = 0;
+		uint8_t best_length = 0;
 		char best_char = text[pos];
 		
 		// Границы окна истории
@@ -30,8 +31,8 @@ std::vector<Token> encode(const std::string& text) {
 			}
 
 			if (current_length > best_length) {
-				best_offset = pos - i;
-				best_length = current_length;
+				best_offset = static_cast<uint16_t>(pos - i);
+				best_length = static_cast<uint8_t>(current_length);
 				best_char = (pos + best_length < size_text) ? text[pos + best_length] : '\0';
 			}
 		}

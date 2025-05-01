@@ -1,8 +1,17 @@
 #include <iostream>
 #include <fstream>
 #include <Windows.h>
+#include <cstdint>
 #include "LZ77.h"
 #include "file.h"
+
+#pragma pack(push,1)
+struct BinaryToken {
+	uint16_t offset; // Изменить тип
+	uint8_t length;  // Изменить тип
+	char next_char;
+};
+#pragma pack(pop)
 
 std::string compress_file(const std::string& input_path) {
 	std::ifstream input_file(input_path, std::ios::binary);
@@ -14,14 +23,26 @@ std::string compress_file(const std::string& input_path) {
 
 	auto tokens = encode(content);
 
+	// Проверка эффективности сжатия
+	const size_t compressed_size = tokens.size() * sizeof(BinaryToken);
+	if (compressed_size >= content.size()) {
+		return ""; // Сжатие неэффективно
+	}
+
 	std::string output_path = input_path + ".lz77";
 	std::ofstream output_file(output_path, std::ios::binary);
 	if (!output_file) return "";
 
 	for (const auto& token : tokens) {
-		output_file << token.get_offset() << " "
-			<< token.get_length() << " "
-			<< static_cast<int>(token.get_char()) << "\n";
+		if (token.get_offset() > 65535 || token.get_length() > 255) {
+			return "";
+		}
+		BinaryToken bin_token{
+			token.get_offset(),
+			token.get_length(),
+			token.get_char()
+		};
+		output_file.write(reinterpret_cast<const char*>(&bin_token), sizeof(bin_token));
 	}
 
 	return output_path;
@@ -32,11 +53,18 @@ std::string decompress_file(const std::string& input_path) {
 	if (!input_file) return "";
 
 	std::vector<Token> tokens;
-	size_t offset, length;
-	int char_code;
+	BinaryToken bin_token;
 
-	while (input_file >> offset >> length >> char_code) {
-		tokens.emplace_back(offset, length, static_cast<char>(char_code));
+	while (input_file.read(reinterpret_cast<char*>(&bin_token), sizeof(BinaryToken))) {
+		tokens.emplace_back(
+			bin_token.offset,
+			bin_token.length,
+			bin_token.next_char
+		);
+	}
+
+	if (!input_file.eof() && input_file.fail()) {
+		return "";
 	}
 
 	std::string decompressed;
