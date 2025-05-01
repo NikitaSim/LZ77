@@ -1,4 +1,5 @@
 #pragma once
 
-bool compress_file();
-bool decompress_file();
+std::string compress_file(const std::string& input_path);
+std::string decompress_file(const std::string& input_path);
+std::string OpenFileDialog();
