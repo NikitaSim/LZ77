@@ -7,8 +7,8 @@
 
 #pragma pack(push,1)
 struct BinaryToken {
-	uint16_t offset; // Изменить тип
-	uint8_t length;  // Изменить тип
+	uint16_t offset; 
+	uint8_t length;  
 	char next_char;
 };
 #pragma pack(pop)

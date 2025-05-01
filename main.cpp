@@ -8,7 +8,7 @@
 int main() {
 	sf::RenderWindow window(sf::VideoMode(800, 400), "LZ77 File Compressor");
 	sf::Font font;
-	if (!font.loadFromFile("Arial.ttf")) {
+	if (!font.loadFromFile("C:/Windows/Fonts/Arial.ttf")) {
 		return EXIT_FAILURE;
 	}
 
