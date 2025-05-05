@@ -26,7 +26,7 @@ std::string compress_file(const std::string& input_path) {
 	// Проверка эффективности сжатия
 	const size_t compressed_size = tokens.size() * sizeof(BinaryToken);
 	if (compressed_size >= content.size()) {
-		return ""; // Сжатие неэффективно
+		return "";
 	}
 
 	std::string output_path = input_path + ".lz77";

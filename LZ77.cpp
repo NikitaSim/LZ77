@@ -4,8 +4,8 @@
 #include "LZ77.h"
 
 std::vector<Token> encode(const std::string& text) {
-	const size_t window_size = 4096;  // 4KB
-	const size_t lookahead = 18;	//5
+	const size_t window_size = 4096;
+	const size_t lookahead = 18;
 	std::vector<Token> tokens;
 	size_t pos = 0;
 	const size_t size_text = text.size();

@@ -1,10 +1,10 @@
 #pragma once
-#include <cstdint> // Добавить в начало
+#include <cstdint>
 
 class Token {
 private:
-	uint16_t offset; // Изменить тип
-	uint8_t length;  // Изменить тип
+	uint16_t offset;
+	uint8_t length;
 	char next_char;
 public:
 	Token(uint16_t offset, uint8_t len, char n_char)
